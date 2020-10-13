@@ -108,7 +108,7 @@ func (h *HookHandler) resourceMatches(reqID uuid.UUID, gitURL string, resource a
 	if resource.Type != "git" || resource.WebhookToken == "" {
 		logReq(
 			reqID,
-			"git resource with name `%s' not of type `git'",
+			"resource with name `%s' not of type `git'",
 			resource.Name,
 		)
 		return false
