@@ -17,6 +17,7 @@ import (
 
 func main() {
 	configPath := mustEnv("CONFIG")
+	log("loading config at path `%s'", configPath)
 	cfg, err := config.Load(configPath)
 	if err != nil {
 		bailWith("Error loading config: %s", err)
@@ -43,8 +44,10 @@ func main() {
 	).Methods("GET", "POST", "PUT")
 
 	if cfg.Server.TLS.Enabled {
+		log("starting server with TLS")
 		listenAndServeTLS(&cfg.Server, router)
 	} else {
+		log("starting server without TLS")
 		http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), router)
 	}
 }
