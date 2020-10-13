@@ -44,10 +44,10 @@ func main() {
 	).Methods("GET", "POST", "PUT")
 
 	if cfg.Server.TLS.Enabled {
-		log("starting server with TLS")
+		log("starting server with TLS on port %d", cfg.Server.Port)
 		listenAndServeTLS(&cfg.Server, router)
 	} else {
-		log("starting server without TLS")
+		log("starting server without TLS on port %d", cfg.Server.Port)
 		http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), router)
 	}
 }
