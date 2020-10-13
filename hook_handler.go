@@ -201,7 +201,7 @@ func (h *HookHandler) doWebhook(reqID uuid.UUID, team, pipeline, resource, token
 	return resp.StatusCode
 }
 
-var urlRegex = regexp.MustCompile(`^(?:.*@|.*:\/\/)(.*)(:?\.git)$`)
+var urlRegex = regexp.MustCompile(`^(?:.*@|.*:\/\/)(.*)$`)
 
 func (HookHandler) canonizeGitURL(u string) string {
 	matches := urlRegex.FindStringSubmatch(u)
@@ -209,7 +209,7 @@ func (HookHandler) canonizeGitURL(u string) string {
 		return ""
 	}
 
-	return strings.ReplaceAll(matches[1], ":", "/")
+	return strings.TrimSuffix(strings.ReplaceAll(matches[1], ":", "/"), ".git")
 }
 
 func (HookHandler) genWebhookURL(base, team, pipeline, resource, token string) string {
