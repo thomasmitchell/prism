@@ -160,7 +160,9 @@ func (h *HookHandler) doWebhook(reqID uuid.UUID, team, pipeline, resource, token
 		),
 	)
 
-	resp, err := h.Client.HTTPClient().Get(webhookURL)
+	resp, err := h.Client.HTTPClient().Post(
+		webhookURL, "application/x-www-form-urlencoded", nil,
+	)
 	if err != nil {
 		logReq(
 			reqID,
