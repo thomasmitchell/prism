@@ -106,6 +106,11 @@ func (h *HookHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *HookHandler) resourceMatches(reqID uuid.UUID, gitURL string, resource atc.ResourceConfig) bool {
 	if resource.Type != "git" || resource.WebhookToken == "" {
+		logReq(
+			reqID,
+			"git resource with name `%s' not of type `git'",
+			resource.Name,
+		)
 		return false
 	}
 
@@ -129,7 +134,17 @@ func (h *HookHandler) resourceMatches(reqID uuid.UUID, gitURL string, resource a
 		return false
 	}
 
-	return h.canonizeGitURL(gitResourceURI) == gitURL
+	canonicalResourceURL := h.canonizeGitURL(gitResourceURI)
+	isMatch := canonicalResourceURL == gitURL
+	if !isMatch {
+		logReq(
+			reqID,
+			"git resource with name `%s' and url `%s' does not match requested git url `%s'",
+			resource.Name, canonicalResourceURL, gitURL,
+		)
+	}
+
+	return isMatch
 }
 
 func (h *HookHandler) doWebhook(reqID uuid.UUID, team, pipeline, resource, token string) int {
