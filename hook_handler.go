@@ -97,6 +97,10 @@ func (h *HookHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		errCode = http.StatusOK
 	}
 
+	if errCode == http.StatusNotFound {
+		logReq(reqID, "no pipelines matching git url spec were found, returning 404")
+	}
+
 	w.WriteHeader(errCode)
 }
 
