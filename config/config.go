@@ -42,7 +42,9 @@ func Load(filepath string) (*Config, error) {
 
 	yDec := yaml.NewDecoder(f)
 	yDec.SetStrict(true)
-	ret := &Config{}
+	ret := &Config{
+		Server: Server{Port: 4580},
+	}
 	err = yDec.Decode(ret)
 	return ret, err
 }
