@@ -125,7 +125,7 @@ type concourseAuth struct {
 
 func (c concourseAuth) Token() (*oauth2.Token, error) {
 	oauth2Config := oauth2.Config{
-		ClientID:     "prism",
+		ClientID:     "fly",
 		ClientSecret: "Zmx5",
 		Endpoint:     oauth2.Endpoint{TokenURL: c.url + "/sky/issuer/token"},
 		Scopes:       []string{"openid", "profile", "email", "federated:id", "groups"},
