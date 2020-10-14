@@ -29,8 +29,8 @@ type Server struct {
 
 type TLS struct {
 	Enabled     bool   `yaml:"enabled"`
-	Certificate string `yaml:"certificate"`
-	PrivateKey  string `yaml:"private_key"`
+	CertificatePath string `yaml:"certificate_path"`
+	PrivateKeyPath  string `yaml:"private_key_path"`
 }
 
 func Load(filepath string) (*Config, error) {

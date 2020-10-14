@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"os"
 	"time"
@@ -60,34 +59,21 @@ func main() {
 		},
 	).Methods("GET", "POST", "PUT")
 
+	bindAddr := fmt.Sprintf(":%d", cfg.Server.Port)
 	if cfg.Server.TLS.Enabled {
 		log("starting server with TLS on port %d", cfg.Server.Port)
-		listenAndServeTLS(&cfg.Server, router)
+		err = http.ListenAndServeTLS(
+			bindAddr,
+			cfg.Server.TLS.CertificatePath,
+			cfg.Server.TLS.PrivateKeyPath,
+			router,
+		)
 	} else {
 		log("starting server without TLS on port %d", cfg.Server.Port)
-		http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), router)
-	}
-}
-
-func listenAndServeTLS(conf *config.Server, handler http.Handler) error {
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", conf.Port))
-	if err != nil {
-		return err
+		err = http.ListenAndServe(bindAddr, router)
 	}
 
-	defer ln.Close()
-
-	cert, err := tls.X509KeyPair([]byte(conf.TLS.Certificate), []byte(conf.TLS.PrivateKey))
-	if err != nil {
-		return err
-	}
-
-	tlsListener := tls.NewListener(ln, &tls.Config{
-		NextProtos:   []string{"http/1.1"},
-		Certificates: []tls.Certificate{cert},
-	})
-
-	return http.Serve(tlsListener, handler)
+	bailWith("Server exited", err)
 }
 
 func mustEnv(envvar string) string {

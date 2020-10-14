@@ -69,15 +69,12 @@ server:
   tls:
     # (bool); whether the prism server should listen on TLS. Defaults to false.
     enabled: true
-    # (string); the certificate that the prism server should serve
-    certificate: |
-      -----BEGIN CERTIFICATE-----
-      a certificate would go here
-      -----END CERTIFICATE-----
-    private_key: |
-      -----BEGIN PRIVATE KEY-----
-      a private key would go here
-      -----END PRIVATE KEY-----
+    # (string); the filepath to the certificate that the prism server should
+    # serve
+    certificate_file: /path/to/cert
+    # (string); the filepath to the private key that the prism server should
+    # use for TLS
+    private_key_file: /path/to/key
 ```
 
 ## how does one configure a webhook for use with prism?
